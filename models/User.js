@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -29,5 +30,10 @@ UserSchema.pre('save', async function(next){
   this.password = await bcrypt.hash(this.password, salt)
   next() //going to the next function (in this case, its register in auth.js)
 })
+
+//using instance methods on the schema to create a token, you invoke the function in the register controller
+UserSchema.methods.createJwt = function(){
+  return jwt.sign({userId:this._id, name:this.name}, 'jwtSecret', {expiresIn:'30d'})
+}
 
 module.exports = mongoose.model('User', UserSchema)
