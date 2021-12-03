@@ -1,22 +1,25 @@
 const jwt = require('jsonwebtoken')
 
-const {Unathenticatederror} = require('../errors')
+const {UnauthenticatedError} = require('../errors')
 
 const authenticationMiddleware = async (req, res, next)=>{
     const authHead = req.headers.authorization
 
     if(!authHead || !authHead.startsWith('Bearer ')){
-        throw new Unathenticatederror('No token provided')
+        throw new UnauthenticatedError('No token provided')
     }
 
     const token = authHead.split(' ')[1]
     try {
         const payload = jwt.verify(token, process.env.jwt_secret)
+        //const user = User.findbyId(payload.id).select('-password')
+        //req.user = user
+
         const{userId, name} = payload
         req.user = {userId, name}
         next()
     } catch (error) {
-        throw new Unathenticatederror('You are not authourized to access this page')
+        throw new UnauthenticatedError('You are not authourized to access this page')
     }
 }
 
