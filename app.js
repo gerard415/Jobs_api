@@ -5,6 +5,7 @@ const express = require('express');
 const app = express()
 
 const connectDB = require('./db/connect')
+const authmiddleware = require('./middleware/authentication')
 
 //routes
 const authRoute = require('./routes/auth')
@@ -19,7 +20,7 @@ app.use(express.json());
 
 // routes
 app.use('/api/v1/auth', authRoute)
-app.use('/api/v1/jobs', jobsRoute)
+app.use('/api/v1/jobs', authmiddleware, jobsRoute) //adding the authentication middleware infront of the route to affect all out job routes
 
 
 app.use(notFoundMiddleware);
