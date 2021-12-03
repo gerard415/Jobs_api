@@ -33,7 +33,7 @@ UserSchema.pre('save', async function(next){
 
 //using instance methods on the schema to create a token, you invoke the function in the register controller
 UserSchema.methods.createJwt = function(){
-  return jwt.sign({userId:this._id, name:this.name}, 'jwtSecret', {expiresIn:'30d'})
+  return jwt.sign({userId:this._id, name:this.name}, process.env.jwt_secret, {expiresIn:process.env.jwt_expiration})
 }
 
 module.exports = mongoose.model('User', UserSchema)
