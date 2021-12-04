@@ -15,8 +15,7 @@ const authenticationMiddleware = async (req, res, next)=>{
         //const user = User.findbyId(payload.id).select('-password')
         //req.user = user
 
-        const{userId, name} = payload
-        req.user = {userId, name}
+        req.user = { userId: payload.userId, name: payload.name }
         next()
     } catch (error) {
         throw new UnauthenticatedError('You are not authourized to access this page')
